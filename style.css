@@ -1,0 +1,39 @@
+*{
+    font-size: 14px
+}
+
+.webix_last_row {
+    text-align: center;
+}
+
+.webix_hcell {
+    background-color: rgba(210, 227, 239, 255);
+}
+
+.webix_cell:nth-child(2n - 2) {
+    background-color: rgba(237, 237, 237, 255);
+}
+
+.webix_accordionitem_header {
+    background-color: rgba(46, 113, 158, 255);
+}
+.webix_accordionitem_header.collapsed {
+    background-color: rgba(46, 113, 158, 255);
+}
+.webix_accordionitem_header:hover {
+    background-color: rgba(46, 113, 158, 255);
+}
+
+.webix_accordionitem_label.active {
+    color: white
+}
+
+.webix_accordionitem_label {
+    color: white
+}
+
+.webix_all_tabs{
+    width: 600px;
+}
+
+
