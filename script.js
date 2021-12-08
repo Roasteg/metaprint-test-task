@@ -8,58 +8,109 @@ let data_ = (file, modifier) => webix.ajax(file).then((data) => {
     }
 })
 
+
 let leftFormDatatableCols = [
     {id: "name", header: "Nimetus", adjust: "data"},
-    {id: "normvalue", header: "Väärtus", width: 100,
-        css:{
-            "text-align":"center"
-        }},
+    {
+        id: "normvalue", header: "Väärtus", width: 100,
+        css: {
+            "text-align": "center"
+        }, template: function(obj) {
+            return obj["normvalue"].replace(/\./g, ",")
+        }
+    },
     {id: "unit", header: "Ühik", adjust: "data"},
-    {id: "minok", header: "MIN", width: 150, css:{
-            "text-align":"center"
-        }, template: function(obj){
-        if(obj["minok"] === null){
-            return "-"
-        }
-        else{
-            return obj["minok"]
-        }
-        }},
-    {id: "maxok", header: "MAX", css:{
-            "text-align":"center"
-        }, width: 150,template: function(obj){
-            if(obj["maxok"] === null){
+    {
+        id: "minok", header: "MIN", width: 150, css: {
+            "text-align": "center"
+        }, template: function (obj) {
+            if (obj["minok"] === null) {
                 return "-"
+            } else {
+                return obj["minok"].replace(/\./g, ",")
             }
-            else{
-                return obj["maxok"]
+        }
+    },
+    {
+        id: "maxok", header: "MAX", css: {
+            "text-align": "center"
+        }, width: 150, template: function (obj) {
+            if (obj["maxok"] === null) {
+                return "-"
+            } else {
+                return obj["maxok"].replace(/\./g, ",")
             }
-        }}
+        }
+    }
 ]
 
 let rightFormDatatableCols = [
-    {id: "tlm_nr", header: "Tellimuse Nr", width: 150,css:{
-            "text-align":"center"
-        }},
-    {id: "jooks", header: "Jooks", css: {"text-align":"center"}},
-    {id: "plekk", header: "Pleki kood", adjust: "data", css: {"text-align":"center"}},
-    {id: "moot", header: "Mõõt", adjust: "data", css: {"text-align":"center"}},
-    {id: "margEes", header: [{text: "Margiserv", css: {"text-align":"center"}, colspan: 2}, "EES"], css: {"text-align":"center"}},
-    {id: "margTaga", header: ["", "TAGA"], width: 170, css: {"text-align":"center"},},
-    {id: "lacqFreeEes", header: [{text: "Lakivaba tsoon", css: {"text-align":"center"}, colspan: 2},"EES"],css: {"text-align":"center"}, width: 170},
-    {id: "lacqFreeTaga", header: ["", "TAGA"], css: {"text-align":"center"}, width:170},
-    {id: "kpv", header: "Kuupäev", adjust: "data", template: function (obj){
-        return obj['kpv'].replace(/\-/g, '.')
-        }},
-    {id: "time", header: "Kellaaeg", adjust: "data"}
+    {
+        id: "tlm_nr",
+        header: [{text: "Tellimuse Nr.", css: {"text-align": "center", "border-bottom": "0 !important"}}, ""],
+        css: {"text-align": "center"},
+        width: 150
+    },
+    {id: "jooks", header: [{text: "Jooks", css: {"text-align": "center", "border-bottom": "0 !important"}}, ""],
+        css: {"text-align": "center"}},
+    {
+        id: "plekk",
+        header: [{text: "Pleki kood", css: {"text-align": "center", "border-bottom": "0 !important"}}, ""],
+        adjust: "data"
+    },
+    {
+        id: "moot",
+        header: [{text: "Mõõt", css: {"text-align": "center", "border-bottom": "0 !important"}}, ""],
+        adjust: "data",
+        css: {"text-align": "center"}
+    },
+    {
+        id: "margEes",
+        header: [{text: "Margiserv", css: {"text-align": "center"}, colspan: 2}, "EES"],
+        css: {"text-align": "center"}
+    },
+    {id: "margTaga", header: ["", "TAGA"], width: 170, css: {"text-align": "center"}},
+    {
+        id: "lacqFreeEes",
+        header: [{text: "Lakivaba tsoon", css: {"text-align": "center"}, colspan: 2}, "EES"],
+        css: {"text-align": "center"},
+        width: 170
+    },
+    {id: "lacqFreeTaga", header: ["", "TAGA"], css: {"text-align": "center"}, width: 170},
+    {
+        id: "kpv",
+        header: [{text: "Kuupäev", css: {"text-align": "center", "border-bottom": "0 !important"}}, ""],
+        adjust: "data",
+        template: function (obj) {
+            return obj['kpv'].replace(/\-/g, '.')
+        }
+    },
+    {id: "time", header: [{text: "Kellaaeg", css: {"text-align":"center", "border-bottom": "0 !important"}}, ""], adjust: "data"}
 ]
 
 let rightFormColsInput = [
-    {view: "text", label: "Viskoossus", validate: webix.rules.isNotEmpty(), labelPosition: "top"},
-    {view: "text", label: "Laki temperatuur", labelPosition: "top"},
-    {view: "text", label: "Märg kaal", labelPosition: "top"},
-    {view: "text", label: "Kuiv kaal", labelPosition: "top"},
-    {view: "button", autowidth: true, autoheight: true, value: "+"},
+    {view: "text", label: "Viskoossus", name: "viskoossus", labelPosition: "top"},
+    {width: 10},
+    {view: "text", label: "Laki temperatuur", name: "temp", labelPosition: "top"},
+    {width: 10},
+    {view: "text", label: "Märg kaal", name: "mkaal", labelPosition: "top"},
+    {width: 10},
+    {view: "text", label: "Kuiv kaal", name: "kkaal", labelPosition: "top"},
+    {
+        rows: [
+            {},
+            {
+                view: "button", id: "submitForm", type: "icon", icon:"mdi mdi-plus", align: "center", width: 30, click: function () {
+                    if (this.getFormView().validate()) {
+                        this.getFormView().getValues()
+                    } else {
+                        webix.message("Please, fill the gaps")
+                    }
+                }
+            }
+        ]
+
+    },
 
 ]
 
@@ -67,7 +118,11 @@ let rightFormTabViewCells = [
     {header: "Viimased mõõtmised"},
     {
         header: "Margiseva mõõtmised", body: {
-            view: "datatable", data: data_("grid.json"), columns: rightFormDatatableCols, height: 200, fillspace: true
+            view: "datatable",
+            data: data_("form_right.json"),
+            columns: rightFormDatatableCols,
+            height: 200,
+            fillspace: true
 
         }
     },
@@ -76,9 +131,11 @@ let rightFormTabViewCells = [
 ]
 
 let rightFormTabView = [
-    {view: "tabview", cells: rightFormTabViewCells, padding:{
-        top: 20
-        }}
+    {
+        view: "tabview", cells: rightFormTabViewCells, padding: {
+            top: 20
+        }
+    }
 ]
 
 let dataFormElements = [
@@ -88,7 +145,7 @@ let dataFormElements = [
     {
         view: "datatable",
         id: "table",
-        data: data_("form.json", "params"),
+        data: data_("form_left.json", "params"),
         columns: leftFormDatatableCols,
         autoheight: true,
         fillspace: true,
@@ -111,34 +168,38 @@ let mainCols = [
         view: "form",
         id: "dataFormTable",
         elements: dataFormElements,
-        data: data_("form.json"),
+        data: data_("form_left.json"),
     },
     {width: 5},
     {
-        view: "form", id: "dataFormTab", elements: dataFormTabElements
+        view: "form", id: "dataFormTab", elements: dataFormTabElements, rules: {
+            "viskoossus": webix.rules.isNotEmpty,
+            "temp": webix.rules.isNotEmpty,
+            "mkaal": webix.rules.isNotEmpty,
+            "kkaal": webix.rules.isNotEmpty
+        }
     }
 ]
 
 let main = [
-        {
-            view: "accordion", multi: true,
-            rows: [
-                {
-                    header: "lakk 28S61MA Valspari kuld tootmisinfo ja mõõtmised",
-                    body: {
-                        cols: mainCols,
-                    }
+    {
+        view: "accordion", multi: true,
+        rows: [
+            {
+                header: "lakk 28S61MA Valspari kuld tootmisinfo ja mõõtmised",
+                body: {
+                    cols: mainCols,
                 }
-            ]
-        }
+            }
+        ]
+    }
 ]
 
 webix.ready(function () {
-    webix.ui({
-        container: "container",
-        cols: main,
-    })
+        webix.ui({
+            container: "container",
+            cols: main,
+        })
     }
 )
-
 
