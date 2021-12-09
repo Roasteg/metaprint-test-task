@@ -58,6 +58,7 @@ let rightFormDatatableCols = [
     {
         id: "plekk",
         header: [{text: "Pleki kood", css: {"text-align": "center", "border-bottom": "0 !important"}}, ""],
+        css: {"text-align": "center"},
         adjust: "data"
     },
     {
