@@ -34,7 +34,7 @@ let leftFormDatatableCols = [
     {
         id: "maxok", header: "MAX", css: {
             "text-align": "center"
-        }, width: 150, template: function (obj) {
+        }, width: 150, fillspace: true, template: function (obj) {
             if (obj["maxok"] === null) {
                 return "-"
             } else {
