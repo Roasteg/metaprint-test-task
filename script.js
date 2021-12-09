@@ -1,5 +1,5 @@
 let _form = [];
-let data_ = (file, modifier) => webix.ajax(file).then((data) => {
+let _data = (file, modifier) => webix.ajax(file).then((data) => {
     _form = data.json()
     if (modifier) {
         return _form[modifier];
@@ -15,7 +15,7 @@ let leftFormDatatableCols = [
         id: "normvalue", header: "Väärtus", width: 100,
         css: {
             "text-align": "center"
-        }, template: function(obj) {
+        }, template: function (obj) {
             return obj["normvalue"].replace(/\./g, ",")
         }
     },
@@ -51,8 +51,10 @@ let rightFormDatatableCols = [
         css: {"text-align": "center"},
         width: 150
     },
-    {id: "jooks", header: [{text: "Jooks", css: {"text-align": "center", "border-bottom": "0 !important"}}, ""],
-        css: {"text-align": "center"}},
+    {
+        id: "jooks", header: [{text: "Jooks", css: {"text-align": "center", "border-bottom": "0 !important"}}, ""],
+        css: {"text-align": "center"}
+    },
     {
         id: "plekk",
         header: [{text: "Pleki kood", css: {"text-align": "center", "border-bottom": "0 !important"}}, ""],
@@ -85,7 +87,11 @@ let rightFormDatatableCols = [
             return obj['kpv'].replace(/\-/g, '.')
         }
     },
-    {id: "time", header: [{text: "Kellaaeg", css: {"text-align":"center", "border-bottom": "0 !important"}}, ""], adjust: "data"}
+    {
+        id: "time",
+        header: [{text: "Kellaaeg", css: {"text-align": "center", "border-bottom": "0 !important"}}, ""],
+        adjust: "data"
+    }
 ]
 
 let rightFormColsInput = [
@@ -100,7 +106,13 @@ let rightFormColsInput = [
         rows: [
             {},
             {
-                view: "button", id: "submitForm", type: "icon", icon:"mdi mdi-plus", align: "center", width: 30, click: function () {
+                view: "button",
+                id: "submitForm",
+                type: "icon",
+                icon: "mdi mdi-plus",
+                align: "center",
+                width: 30,
+                click: function () {
                     if (this.getFormView().validate()) {
                         this.getFormView().getValues()
                     } else {
@@ -119,7 +131,7 @@ let rightFormTabViewCells = [
     {
         header: "Margiseva mõõtmised", body: {
             view: "datatable",
-            data: data_("form_right.json"),
+            data: _data("form_right.json"),
             columns: rightFormDatatableCols,
             height: 200,
             fillspace: true
@@ -145,7 +157,7 @@ let dataFormElements = [
     {
         view: "datatable",
         id: "table",
-        data: data_("form_left.json", "params"),
+        data: _data("form_left.json", "params"),
         columns: leftFormDatatableCols,
         autoheight: true,
         fillspace: true,
@@ -168,7 +180,7 @@ let mainCols = [
         view: "form",
         id: "dataFormTable",
         elements: dataFormElements,
-        data: data_("form_left.json"),
+        data: _data("form_left.json"),
     },
     {width: 5},
     {
